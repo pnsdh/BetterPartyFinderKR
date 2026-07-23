@@ -28,14 +28,6 @@ public partial class ConfigWindow
                 ImGui.SameLine();
                 ImGui.TextColored(ImGuiColors.ParsedGold, Plugin.Interface.Manifest.Author);
 
-                ImGui.TextUnformatted("디스코드:");
-                ImGui.SameLine();
-                ImGui.TextColored(ImGuiColors.ParsedGold, "@infi");
-
-                ImGui.TextUnformatted("수정:");
-                ImGui.SameLine();
-                ImGui.TextColored(ImGuiColors.ParsedGold, "Enzyu");
-
                 ImGui.TextUnformatted("버전:");
                 ImGui.SameLine();
                 ImGui.TextColored(ImGuiColors.ParsedOrange, Plugin.Interface.Manifest.AssemblyVersion.ToString() + " (KR Custom)");
@@ -73,8 +65,8 @@ public partial class ConfigWindow
 
         using (ImRaii.PushColor(ImGuiCol.Button, ImGuiColors.ParsedPurple))
         {
-            if (ImGui.Button("달라살려 디스코드"))
-                Dalamud.Utility.Util.OpenLink("https://discord.gg/q9VvFC6RTH");
+            if (ImGui.Button("수정판 디스코드"))
+                Dalamud.Utility.Util.OpenLink("https://discord.gg/AjVHyDNjUd");
         }
     }
 }
