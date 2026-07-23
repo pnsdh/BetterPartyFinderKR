@@ -75,8 +75,8 @@ jobs:
           # bin/<platform>/Release/BetterPartyFinder/ — locate them wherever they landed.
           $zip = Get-ChildItem "BetterPartyFinder/bin" -Recurse -Filter "latest.zip" | Select-Object -First 1
           if (-not $zip) { throw "latest.zip not found under BetterPartyFinder/bin" }
-          $json = Get-ChildItem $zip.DirectoryName -Filter "BetterPartyFinder.json" | Select-Object -First 1
-          if (-not $json) { throw "BetterPartyFinder.json not found next to latest.zip" }
+          $json = Get-ChildItem $zip.DirectoryName -Filter "BetterPartyFinderKR.json" | Select-Object -First 1
+          if (-not $json) { throw "BetterPartyFinderKR.json not found next to latest.zip" }
           New-Item -ItemType Directory -Force -Path release_assets | Out-Null
           Copy-Item $zip.FullName, $json.FullName -Destination release_assets
           Get-ChildItem release_assets
@@ -89,4 +89,4 @@ jobs:
           name: ${{ steps.ver.outputs.tag }}
           files: |
             release_assets/latest.zip
-            release_assets/BetterPartyFinder.json
+            release_assets/BetterPartyFinderKR.json

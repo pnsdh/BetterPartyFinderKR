@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Dalamud.Configuration;
 using Dalamud.Game.Gui.PartyFinder.Types;
 
@@ -21,7 +23,33 @@ public class Configuration : IPluginConfiguration
 
     internal static Configuration? Load()
     {
+        MigrateLegacyConfig();
         return (Configuration?) Plugin.Interface.GetPluginConfig();
+    }
+
+    // InternalName이 BetterPartyFinder → BetterPartyFinderKR로 바뀌면서 설정 파일 이름과
+    // 직렬화된 $type의 어셈블리 표기가 달라졌다. 새 설정 파일이 없으면 이전 파일에서 옮겨온다.
+    private static void MigrateLegacyConfig()
+    {
+        try
+        {
+            var newFile = Plugin.Interface.ConfigFile;
+            if (newFile.Exists)
+                return;
+
+            var oldFile = new FileInfo(Path.Combine(newFile.DirectoryName!, "BetterPartyFinder.json"));
+            if (!oldFile.Exists)
+                return;
+
+            var json = File.ReadAllText(oldFile.FullName);
+            json = Regex.Replace(json, @", BetterPartyFinder(?=[""\]])", ", BetterPartyFinderKR");
+            File.WriteAllText(newFile.FullName, json);
+            Plugin.Log.Information($"이전 설정 파일을 옮겨왔습니다: {oldFile.FullName} → {newFile.FullName}");
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.Warning(e, "이전 설정 파일 마이그레이션에 실패했습니다.");
+        }
     }
 
     internal void Save()
