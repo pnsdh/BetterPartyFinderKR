@@ -1,4 +1,4 @@
-﻿using BetterPartyFinder.Windows.Config;
+using BetterPartyFinder.Windows.Config;
 using BetterPartyFinder.Windows.Main;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
@@ -12,7 +12,7 @@ namespace BetterPartyFinder;
 // ReSharper disable once ClassNeverInstantiated.Global
 public class Plugin : IDalamudPlugin
 {
-    internal static string Name => "Better Party Finder";
+    internal static string Name => "Better Party Finder (KR Custom)";
 
     [PluginService] public static IDalamudPluginInterface Interface { get; private set; } = null!;
     [PluginService] public static IObjectTable ObjectTable { get; private set; } = null!;

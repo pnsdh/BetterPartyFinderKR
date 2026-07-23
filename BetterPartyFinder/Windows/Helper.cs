@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 using Dalamud.Interface;
@@ -56,13 +56,14 @@ public static class Helper
 
 public enum Tabs
 {
-    [Description("Categories")] Categories,
-    [Description("Duties")] Duties,
-    [Description("Item Level")] ILvL,
-    [Description("Jobs")] Jobs,
-    [Description("Restrictions")] Restrictions,
-    [Description("Players")] Players,
-    [Description("Keywords")] Keywords,
+    [Description("KR 커스텀")] Custom,
+    [Description("카테고리")] Categories,
+    [Description("임무")] Duties,
+    [Description("아이템 레벨")] ILvL,
+    [Description("직업")] Jobs,
+    [Description("제한")] Restrictions,
+    [Description("플레이어")] Players,
+    [Description("키워드")] Keywords,
 }
 
 public static class TabHelper

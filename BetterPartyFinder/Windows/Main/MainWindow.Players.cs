@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using Dalamud.Interface;
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
+using System.Linq;
 
 namespace BetterPartyFinder.Windows.Main;
 
@@ -55,6 +56,8 @@ public partial class MainWindow
                 Plugin.Config.Save();
             }
         }
+
+        Helper.TextColored(ImGuiColors.ParsedOrange, "숨기기:");
 
         PlayerInfo? deleting = null;
         foreach (var info in filter.Players)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Dalamud.Game.Command;
 
@@ -7,8 +7,8 @@ namespace BetterPartyFinder;
 public class Commands : IDisposable {
     private static readonly Dictionary<string, string> CommandNames = new()
     {
-        ["/betterpartyfinder"] = "Opens the main interface. Use with args \"c\" or \"config\" to open the settings.",
-        ["/bpf"] = "Alias for /betterpartyfinder",
+        ["/betterpartyfinder"] = "메인 인터페이스를 엽니다. \"c\" 나 \"config\" 인자를 넣으면 설정 인터페이스를 열 수 있습니다.",
+        ["/bpf"] = "/betterpartyfinder의 축약어입니다.",
     };
 
     private Plugin Plugin { get; }

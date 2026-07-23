@@ -8,22 +8,22 @@ public partial class ConfigWindow
 {
     private void General()
     {
-        using var tabItem = ImRaii.TabItem("General");
+        using var tabItem = ImRaii.TabItem("일반");
         if (!tabItem.Success)
             return;
 
         var changed = false;
 
-        changed |= ImGui.Checkbox("Open with PF", ref Plugin.Config.ShowWhenPfOpen);
+        changed |= ImGui.Checkbox("파티 찾기와 동시에 같이 열림", ref Plugin.Config.ShowWhenPfOpen);
 
         var sideOptions = new[]
         {
-            "Left",
-            "Right",
+            "왼쪽",
+            "오른쪽",
         };
         var sideIdx = Plugin.Config.WindowSide == WindowSide.Left ? 0 : 1;
 
-        ImGui.TextUnformatted("Side of PF window to dock to");
+        ImGui.TextUnformatted("파티 찾기 도킹 방향");
         if (ImGui.Combo("###window-side", ref sideIdx, sideOptions, sideOptions.Length))
         {
             Plugin.Config.WindowSide = sideIdx switch
@@ -40,8 +40,8 @@ public partial class ConfigWindow
         ImGui.Separator();
         ImGuiHelpers.ScaledDummy(5.0f);
 
-        changed |= ImGui.Checkbox("Disable in World tab", ref Plugin.Config.DisableInWorld);
-        changed |= ImGui.Checkbox("Disable in Private tab", ref Plugin.Config.DisableInPrivate);
+        changed |= ImGui.Checkbox("서버 내 탭에서 작동 정지", ref Plugin.Config.DisableInWorld);
+        changed |= ImGui.Checkbox("비공개 탭에서 작동 정지", ref Plugin.Config.DisableInPrivate);
 
         if (changed)
             Plugin.Config.Save();

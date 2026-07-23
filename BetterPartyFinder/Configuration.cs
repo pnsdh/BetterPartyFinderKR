@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Configuration;
@@ -32,7 +32,7 @@ public class Configuration : IPluginConfiguration
 
 public class ConfigurationFilter
 {
-    public string Name { get; set; } = "<unnamed preset>";
+    public string Name { get; set; } = "<이름 없는 프리셋>";
 
     public ListMode DutiesMode { get; set; } = ListMode.Blacklist;
     public HashSet<uint> Duties { get; set; } = [];
@@ -43,15 +43,39 @@ public class ConfigurationFilter
     // default to true because that's the PF's default
     // use nosol if trying to avoid spam
 
-    public SearchAreaFlags SearchArea { get; set; } = 0;
-    public MirroredLootRuleFlags LootRule { get; set; } = ~MirroredLootRuleFlags.Normal;
-    public DutyFinderSettingsFlags DutyFinderSettings { get; set; } = DutyFinderSettingsFlags.None;
-    public ConditionFlags Conditions { get; set; } = 0;
-    public MirroredObjectiveFlags Objectives { get; set; } = MirroredObjectiveFlags.None;
+    public SearchAreaFlags SearchArea { get; set; } = ~SearchAreaFlags.None;
+    public MirroredLootRuleFlags LootRule { get; set; } = ~(MirroredLootRuleFlags)0;
+    public DutyFinderSettingsFlags DutyFinderSettings { get; set; } = ~DutyFinderSettingsFlags.None;
+    public ConditionFlags Conditions { get; set; } = ~(ConditionFlags)0;
+    public MirroredObjectiveFlags Objectives { get; set; } = ~(MirroredObjectiveFlags)0;
 
     public bool AllowHugeItemLevel { get; set; } = true;
-    public uint? MinItemLevel { get; set; }
-    public uint? MaxItemLevel { get; set; }
+
+    public bool TwoLoot { get; set; } = true;
+    public bool NoLoot { get; set; } = true;
+
+    public bool EarlyDisband { get; set; } = true;
+    public bool Suicide { get; set; } = true;
+    public bool Scheduled { get; set; } = true;
+
+    public bool Fresh { get; set; } = true;
+    public bool Blind { get; set; } = true;
+    public bool AimToClear { get; set; } = true;
+    public bool ParseRun { get; set; } = true;
+    public bool Grind { get; set; } = true;
+    public bool Practice { get; set; } = true;
+
+    public bool DPSOne { get; set; } = true;
+    public bool DPSTwo { get; set; } = true;
+    public bool TankOne { get; set; } = true;
+    public bool TankTwo { get; set; } = true;
+
+    public bool FixedJobReservation { get; set; } = true;
+    public bool NoDuplication { get; set; } = true;
+
+
+    public uint? MinItemLevel { get; set; } = 0;
+    public uint? MaxItemLevel { get; set; } = 0;
 
     public KeywordsInfo Keywords { get; set; } = new([], [], WhitelistMode.Any);
 
@@ -140,6 +164,23 @@ public class ConfigurationFilter
             MaxItemLevel = MaxItemLevel,
             MinItemLevel = MinItemLevel,
             AllowHugeItemLevel = AllowHugeItemLevel,
+            TwoLoot = TwoLoot,
+            NoLoot = NoLoot,
+            Fresh = Fresh,
+            Blind = Blind,
+            Suicide = Suicide,
+            Scheduled = Scheduled,
+            NoDuplication = NoDuplication,
+            FixedJobReservation = FixedJobReservation,
+            AimToClear = AimToClear,
+            ParseRun = ParseRun,
+            Grind = Grind,
+            EarlyDisband = EarlyDisband,
+            DPSOne = DPSOne,
+            DPSTwo = DPSTwo,
+            Practice = Practice,
+            TankOne = TankOne,
+            TankTwo = TankTwo,
             Players = players,
             Keywords = keywords,
         };

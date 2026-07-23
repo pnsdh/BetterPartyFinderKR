@@ -18,11 +18,11 @@ public partial class MainWindow
         ImGui.TableSetupColumn("##Add");
 
         ImGui.TableNextColumn();
-        Helper.TextColored(ImGuiColors.HealerGreen, "Show:");
+        Helper.TextColored(ImGuiColors.HealerGreen, "보이기:");
         ImGui.Separator();
 
         ImGui.TableNextColumn();
-        Helper.TextColored(ImGuiColors.ParsedOrange, "Hide:");
+        Helper.TextColored(ImGuiColors.ParsedOrange, "숨기기:");
         ImGui.Separator();
 
         ImGui.TableNextColumn();

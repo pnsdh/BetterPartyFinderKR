@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
@@ -17,11 +17,11 @@ public partial class MainWindow
             ImGui.InputText("###keyword-text", ref KeywordText, 64);
 
         ImGui.SameLine();
-        if (ImGui.Button(WhitelistSelected ? "Whitelist" : "Blacklist"))
+        if (ImGui.Button(WhitelistSelected ? "화이트리스트" : "블랙리스트"))
             WhitelistSelected = !WhitelistSelected;
 
         if (ImGui.IsItemHovered())
-            Helper.Tooltip("Click to switch between whitelist and blacklist.");
+            Helper.Tooltip("클릭하여 화이트리스트와 블랙리스트를 토글 할 수 있습니다.");
 
         ImGui.SameLine();
         if (Helper.IconButton(FontAwesomeIcon.Plus, "add-keyword"))
@@ -48,25 +48,25 @@ public partial class MainWindow
         if (label == "Whitelist")
         {
             ImGui.AlignTextToFramePadding();
-            ImGui.TextUnformatted("Whitelist Mode:");
+            ImGui.TextUnformatted("화이트리스트 모드:");
             ImGui.SameLine();
-            if (ImGui.Button($"{(filter.Keywords.Mode == WhitelistMode.All ? "ALL" : "ANY")}"))
+            if (ImGui.Button($"{(filter.Keywords.Mode == WhitelistMode.All ? "전체 포함" : "하나라도 포함")}"))
             {
                 filter.Keywords.Mode = filter.Keywords.Mode == WhitelistMode.All ? WhitelistMode.Any : WhitelistMode.All; // toggle between ALL and ANY
                 Plugin.Config.Save();
             }
 
-            ImGuiComponents.HelpMarker("Toggle if any or all whitelist terms must be in the description.");
+            ImGuiComponents.HelpMarker("클릭하여 화이트리스트 모드를 전체 포함으로 할지, 하나라도 포함으로 할지 설정할 수 있습니다.");
 
             ImGui.Separator();
 
-            ImGui.TextUnformatted("Whitelist:");
+            ImGui.TextUnformatted("화이트리스트:");
         }
         else
         {
             ImGui.Separator();
 
-            ImGui.TextUnformatted("Blacklist:");
+            ImGui.TextUnformatted("블랙리스트:");
         }
 
         var toDelete = string.Empty;

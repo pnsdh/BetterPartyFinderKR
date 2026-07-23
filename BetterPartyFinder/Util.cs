@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -43,8 +43,13 @@ public static class Util
 
     internal static IEnumerable<World> WorldsOnDataCentre(IPlayerCharacter character)
     {
+        uint[] krServerIds = [2075, 2076, 2077, 2078, 2080];
+        return Sheets.WorldSheet.Where(world => krServerIds.Contains(world.RowId));
+
+        /*
         var dcRow = character.HomeWorld.Value.DataCenter.Value.Region;
         return Sheets.WorldSheet.Where(world => world.IsPublic && world.DataCenter.Value.Region.RowId == dcRow.RowId);
+        */
     }
 
     /// <summary> Iterate over enumerables with additional index. </summary>

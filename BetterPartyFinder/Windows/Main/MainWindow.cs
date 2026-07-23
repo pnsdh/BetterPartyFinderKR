@@ -20,13 +20,14 @@ public unsafe partial class MainWindow : Window, IDisposable
     private string PresetName { get; set; } = string.Empty;
 
     private Tabs SelectedTab;
-    private static readonly Tabs[] WindowTabs = [Tabs.Categories, Tabs.Duties, Tabs.ILvL, Tabs.Jobs, Tabs.Restrictions, Tabs.Players, Tabs.Keywords];
+    //private static readonly Tabs[] WindowTabs = [Tabs.Categories, Tabs.Duties, Tabs.ILvL, Tabs.Jobs, Tabs.Restrictions, Tabs.Players, Tabs.Keywords];
+    private static readonly Tabs[] WindowTabs = [Tabs.Custom, Tabs.Categories, Tabs.Duties, Tabs.ILvL, Tabs.Jobs, Tabs.Restrictions, Tabs.Players, Tabs.Keywords];
 
     public MainWindow(Plugin plugin) : base(Plugin.Name)
     {
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(450, 520),
+            MinimumSize = new Vector2(420, 520),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue),
         };
 
@@ -83,7 +84,7 @@ public unsafe partial class MainWindow : Window, IDisposable
         string selectedName;
         if (selected == null)
         {
-            selectedName = "<none>";
+            selectedName = "<적용된 프리셋 없음>";
         }
         else
         {
@@ -94,15 +95,16 @@ public unsafe partial class MainWindow : Window, IDisposable
             else
             {
                 Plugin.Config.SelectedPreset = null;
-                selectedName = "<invalid preset>";
+                selectedName = "<잘못된 프리셋>";
             }
         }
 
+        ImGui.SetNextItemWidth(250f);
         using (var combo = ImRaii.Combo("###preset", selectedName))
         {
             if (combo.Success)
             {
-                if (ImGui.Selectable("<none>"))
+                if (ImGui.Selectable("<적용된 프리셋 없음>"))
                 {
                     Plugin.Config.SelectedPreset = null;
                     Plugin.Config.Save();
@@ -135,7 +137,7 @@ public unsafe partial class MainWindow : Window, IDisposable
         }
 
         if (ImGui.IsItemHovered())
-            Helper.Tooltip("Add new preset");
+            Helper.Tooltip("새로운 프리셋 추가");
 
         ImGui.SameLine();
 
@@ -146,7 +148,7 @@ public unsafe partial class MainWindow : Window, IDisposable
         }
 
         if (ImGui.IsItemHovered())
-            Helper.Tooltip("Delete selected preset");
+            Helper.Tooltip("선택된 프리셋 삭제");
 
         ImGui.SameLine();
 
@@ -160,23 +162,28 @@ public unsafe partial class MainWindow : Window, IDisposable
             }
         }
 
-        using (var modal = ImRaii.PopupModal("Rename preset###rename-preset"))
+        using (var modal = ImRaii.PopupModal("프리셋 이름 변경###rename-preset"))
         {
             if (modal.Success && selected != null)
             {
                 if (Plugin.Config.Presets.TryGetValue(selected.Value, out var editPreset))
                 {
-                    ImGui.TextUnformatted("Preset name");
+                    ImGui.TextUnformatted("프리셋 이름");
                     ImGui.PushItemWidth(-1f);
                     var name = PresetName;
                     if (ImGui.InputText("###preset-name", ref name, 1_000))
                         PresetName = name;
                     ImGui.PopItemWidth();
 
-                    if (ImGui.Button("Save") && PresetName.Trim().Length > 0)
+                    if (ImGui.Button("저장") && PresetName.Trim().Length > 0)
                     {
                         editPreset.Name = PresetName;
                         Plugin.Config.Save();
+                        ImGui.CloseCurrentPopup();
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("취소") && PresetName.Trim().Length > 0)
+                    {
                         ImGui.CloseCurrentPopup();
                     }
                 }
@@ -184,7 +191,7 @@ public unsafe partial class MainWindow : Window, IDisposable
         }
 
         if (ImGui.IsItemHovered())
-            Helper.Tooltip("Rename selected preset");
+            Helper.Tooltip("선택된 프리셋 이름 변경");
 
         ImGui.SameLine();
 
@@ -195,7 +202,7 @@ public unsafe partial class MainWindow : Window, IDisposable
                 var guid = Guid.NewGuid();
 
                 var copied = copyFilter.Clone();
-                copied.Name += " (copy)";
+                copied.Name += " (복사됨)";
                 Plugin.Config.Presets.Add(guid, copied);
                 Plugin.Config.SelectedPreset = guid;
                 Plugin.Config.Save();
@@ -203,14 +210,14 @@ public unsafe partial class MainWindow : Window, IDisposable
         }
 
         if (ImGui.IsItemHovered())
-            Helper.Tooltip("Copy selected preset");
+            Helper.Tooltip("선택된 프리셋 복제");
 
         ImGui.Separator();
 
         var pos = ImGui.GetCursorPos();
 
         var nameDict = TabHelper.TabSize(WindowTabs);
-        var childSize = new Vector2(nameDict.Select(pair => pair.Value.Width).Max(), 0);
+        var childSize = new Vector2((int)(nameDict.Select(pair => pair.Value.Width).Max() * 1.5), 0);
         using (var tabChild = ImRaii.Child("Tabs", childSize, true))
         {
             if (tabChild.Success)
@@ -234,6 +241,9 @@ public unsafe partial class MainWindow : Window, IDisposable
 
                 switch (SelectedTab)
                 {
+                    case Tabs.Custom:
+                        DrawCustomTab(filter);
+                        break;
                     case Tabs.Categories:
                         DrawCategoriesTab(filter);
                         break;

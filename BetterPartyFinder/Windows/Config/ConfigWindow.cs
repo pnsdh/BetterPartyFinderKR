@@ -9,7 +9,7 @@ public partial class ConfigWindow : Window, IDisposable
 {
     private readonly Plugin Plugin;
 
-    public ConfigWindow(Plugin plugin) : base($"{Plugin.Name} settings")
+    public ConfigWindow(Plugin plugin) : base($"{Plugin.Name} 설정")
     {
         SizeConstraints = new WindowSizeConstraints
         {

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
@@ -18,15 +18,15 @@ public partial class MainWindow
     {
         var listModeStrings = new[]
         {
-            "Show ONLY these duties",
-            "Do NOT show these duties",
+            "선택한 임무만 표시",
+            "선택하지 않은 임무만 표시",
         };
 
-        Helper.TextColored(ImGuiColors.DalamudOrange, "Options:");
+        Helper.TextColored(ImGuiColors.DalamudOrange, "표시 설정:");
         ImGui.Separator();
 
         var listModeIdx = filter.DutiesMode == ListMode.Blacklist ? 1 : 0;
-        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X / 2);
+        ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
         if (ImGui.Combo("###list-mode", ref listModeIdx, listModeStrings, listModeStrings.Length))
         {
             filter.DutiesMode = listModeIdx == 0 ? ListMode.Whitelist : ListMode.Blacklist;
@@ -41,7 +41,7 @@ public partial class MainWindow
         }
 
         if (ImGui.IsItemHovered())
-            Helper.Tooltip("Search new duty for selection");
+            Helper.Tooltip("추가할 새 임무 검색");
 
         ImGui.SameLine();
 
@@ -52,9 +52,9 @@ public partial class MainWindow
         }
 
         if (ImGui.IsItemHovered())
-            Helper.Tooltip("Clear all duties from the selection");
+            Helper.Tooltip("선택된 모든 임무 리스트 삭제");
 
-        Helper.TextColored(ImGuiColors.HealerGreen, "Selected:");
+        Helper.TextColored(ImGuiColors.HealerGreen, "선택됨:");
         ImGui.Separator();
 
         using var child = ImRaii.Child("duty-selection", Vector2.Zero);
@@ -84,7 +84,7 @@ public partial class MainWindow
             ImGui.SetKeyboardFocusHere(0);
         }
 
-        if (ImGui.InputTextWithHint("##DutySheetSearch", "Search", ref DutySearchQuery, 128, ImGuiInputTextFlags.AutoSelectAll))
+        if (ImGui.InputTextWithHint("##DutySheetSearch", "...", ref DutySearchQuery, 128, ImGuiInputTextFlags.AutoSelectAll))
             FilteredDuties = null;
 
         FilteredDuties ??= Sheets.DutyCache.Where(duty => duty.Name.ExtractText().ContainsIgnoreCase(DutySearchQuery)).ToArray();
