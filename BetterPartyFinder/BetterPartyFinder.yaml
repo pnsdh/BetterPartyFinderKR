@@ -1,15 +1,23 @@
 ﻿author: Infi, ash, Anna
 name: Better Party Finder (KR Custom)
-punchline: Use advanced Party Finder filter presets.
+punchline: 파티 찾기 필터 프리셋으로 원하는 파티만 골라 보기 (한국 서버용)
 description: |-
-  Filter the party finder better.
+  파티 찾기에 고급 필터 프리셋을 제공하는 플러그인입니다.
 
-  All vanilla filtering is available, plus:
+  기본 필터 기능에 더해 다음을 지원합니다:
 
-  - Create filter presets to easily switch between
-  - Whitelist/blacklist specific duties and categories
-  - Add character names to hide PFs from
-  - Remove PFs above maximum item level
-  - Filter on item level range
-  - Filter on multiple jobs and slots (ex. MCH + GNB available)
+  - 필터 프리셋을 만들어 손쉽게 전환
+  - 임무/카테고리 화이트리스트·블랙리스트
+  - 특정 플레이어의 파티 모집 숨기기
+  - 최대 아이템 레벨 초과 모집 숨기기
+  - 아이템 레벨 범위 필터
+  - 복수 잡·슬롯 필터 (예: MCH + GNB 자리)
+
+  한국 서버용 커스텀: 한국어 UI, 한국 파티 찾기 용어 기반 빠른 키워드 필터링, 직업 필터링 확장.
 repo_url: https://github.com/pnsdh/BetterPartyFinderKR
+tags:
+  - party finder
+  - filter
+  - preset
+  - korean
+  - kr
