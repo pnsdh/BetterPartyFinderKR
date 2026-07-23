@@ -231,14 +231,10 @@ public unsafe partial class MainWindow : Window, IDisposable
         ImGui.SetCursorPos(pos with {X = pos.X + childSize.X});
         using (var contentChild = ImRaii.Child("Content", Vector2.Zero, true))
         {
-            if (contentChild.Success)
+            // 프리셋이 없어도 return하지 않는다. 아래의 왼쪽 도킹 위치 갱신까지 항상 도달해야
+            // 파티 찾기 창을 옮길 때 도킹된 창이 따라온다.
+            if (contentChild.Success && selected != null && Plugin.Config.Presets.TryGetValue(selected.Value, out var filter))
             {
-                if (selected == null)
-                    return;
-
-                if (!Plugin.Config.Presets.TryGetValue(selected.Value, out var filter))
-                    return;
-
                 switch (SelectedTab)
                 {
                     case Tabs.Custom:
