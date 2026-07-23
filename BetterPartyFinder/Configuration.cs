@@ -102,8 +102,8 @@ public class ConfigurationFilter
     public bool NoDuplication { get; set; } = true;
 
 
-    public uint? MinItemLevel { get; set; } = 0;
-    public uint? MaxItemLevel { get; set; } = 0;
+    public uint? MinItemLevel { get; set; }
+    public uint? MaxItemLevel { get; set; }
 
     public KeywordsInfo Keywords { get; set; } = new([], [], WhitelistMode.Any);
 

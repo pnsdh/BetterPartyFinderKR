@@ -9,6 +9,19 @@ namespace BetterPartyFinder;
 
 public class Filter : IDisposable
 {
+    // 파티 구성 안내 파싱용 문자들
+    private const string TankChars = "나전암건";
+    private const string HealerChars = "백학점현";
+    private const string DpsChars = "사바몽용닌리맆음기무흑적픽소솬";
+    private const string BlankChars = "_0oㅇㅁ○□";
+
+    // 목록 하나마다 호출되는 경로이므로 정규식은 한 번만 컴파일한다
+    private static readonly Regex SuicideRegex = new("자살|die|클.*죽음|클.*포기", RegexOptions.Compiled);
+    private static readonly Regex ScheduledRegex = new("[0-9]분|[0-9]시|\\d{2}:\\d{2}|\\d{2}출", RegexOptions.Compiled);
+    private static readonly Regex GrindRegex = new("[0-9]클", RegexOptions.Compiled);
+    private static readonly Regex EarlyDisbandRegex = new("까지.*(트라이|진행|종료|해산|쫑)|[0-9](트.*쫑|음식)", RegexOptions.Compiled);
+    private static readonly Regex PartyCompRegex = new($"([{TankChars}{BlankChars}]{{2}}).*([{HealerChars}{BlankChars}]{{2}}).*([{DpsChars}{BlankChars}]{{4}})", RegexOptions.Compiled);
+
     private Plugin Plugin { get; }
 
     internal Filter(Plugin plugin)
@@ -72,6 +85,9 @@ public class Filter : IDisposable
     private unsafe bool ListingVisible(IPartyFinderListing listing)
     {
         var instance = AgentLookingForGroup.Instance();
+        if (instance == null)
+            return true;
+
         if (instance->SearchAreaTab == 1 && Plugin.Config.DisableInWorld)
         {
             Plugin.Log.Verbose("Disabled in world tab.");
@@ -115,13 +131,14 @@ public class Filter : IDisposable
         }
 
         // filter based on item level range
-        if (filter.MinItemLevel != null && listing.MinimumItemLevel < filter.MinItemLevel)
+        // 0은 UI에서 "꺼짐"으로 안내되고, 과거 버전이 기본값 0을 저장한 설정도 있으므로 null과 동일하게 취급한다
+        if (filter.MinItemLevel is > 0 && listing.MinimumItemLevel < filter.MinItemLevel)
         {
             Plugin.Log.Verbose("early exit 3");
             return false;
         }
 
-        if (filter.MaxItemLevel != null && listing.MinimumItemLevel > filter.MaxItemLevel)
+        if (filter.MaxItemLevel is > 0 && listing.MinimumItemLevel > filter.MaxItemLevel)
         {
             Plugin.Log.Verbose("early exit 4");
             return false;
@@ -251,9 +268,7 @@ public class Filter : IDisposable
         // 클각 시 자살 제외
         if (!filter.Suicide)
         {
-            var regex = new Regex("자살|die|클.*죽음|클.*포기");
-
-            if (regex.IsMatch(description))
+            if (SuicideRegex.IsMatch(description))
             {
                 return false;
             }
@@ -262,9 +277,7 @@ public class Filter : IDisposable
         // 시간 지정된 파티 제외
         if (!filter.Scheduled)
         {
-            var regex = new Regex("[0-9]분|[0-9]시|\\d{2}:\\d{2}|\\d{2}출");
-
-            if (regex.IsMatch(description))
+            if (ScheduledRegex.IsMatch(description))
             {
                 return false;
             }
@@ -273,9 +286,7 @@ public class Filter : IDisposable
         // N클 파티 제외
         if (!filter.Grind)
         {
-            var regex = new Regex("[0-9]클");
-
-            if (regex.IsMatch(description))
+            if (GrindRegex.IsMatch(description))
             {
                 return false;
             }
@@ -284,9 +295,7 @@ public class Filter : IDisposable
         // 조기 쫑 파티 제외
         if (!filter.EarlyDisband)
         {
-            var regex = new Regex("까지.*(트라이|진행|종료|해산|쫑)|[0-9](트.*쫑|음식)");
-
-            if (regex.IsMatch(description))
+            if (EarlyDisbandRegex.IsMatch(description))
             {
                 return false;
             }
@@ -294,32 +303,24 @@ public class Filter : IDisposable
 
         if (!filter.DPSOne || !filter.DPSTwo || !filter.TankOne || !filter.TankTwo)
         {
-            // 파티 구성 안내가 설명에 적혀 있을 경우 이를 참조함
-            var tank = "나전암건";
-            var healer = "백학점현";
-            var dps = "사바몽용닌리맆음기무흑적픽소솬";
-            var blanks = "_0oㅇㅁ○□";
-
-            var partyRegexString = $"([{tank}{blanks}]{{2}}).*([{healer}{blanks}]{{2}}).*([{dps}{blanks}]{{4}})";
-            var partyRegex = new Regex(partyRegexString);
-
             // 차있으면 true, 비어있으면 false
             // 만일 파티 서술이 되어있지 않다면 전부 빈 자리(false)
             var partySlot = new bool[8];
 
-            if (partyRegex.IsMatch(description))
+            // 파티 구성 안내가 설명에 적혀 있을 경우 이를 참조함
+            var match = PartyCompRegex.Match(description);
+            if (match.Success)
             {
-                var match = partyRegex.Match(description);
                 var partyDescription = "";
 
-                for (int i = 1; i < match.Length; i++)
+                for (int i = 1; i < match.Groups.Count; i++)
                 {
                     partyDescription += match.Groups[i];
                 }
 
-                for (int i = 0; i < partyDescription.Length; i++)
+                for (int i = 0; i < partyDescription.Length && i < partySlot.Length; i++)
                 {
-                    if (!blanks.Contains(partyDescription[i]))
+                    if (!BlankChars.Contains(partyDescription[i]))
                     {
                         partySlot[i] = true;
                     }
