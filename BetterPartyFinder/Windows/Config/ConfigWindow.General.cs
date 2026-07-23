@@ -20,8 +20,14 @@ public partial class ConfigWindow
         {
             "왼쪽",
             "오른쪽",
+            "도킹 안 함",
         };
-        var sideIdx = Plugin.Config.WindowSide == WindowSide.Left ? 0 : 1;
+        var sideIdx = Plugin.Config.WindowSide switch
+        {
+            WindowSide.Left => 0,
+            WindowSide.Right => 1,
+            _ => 2,
+        };
 
         ImGui.TextUnformatted("파티 찾기 도킹 방향");
         if (ImGui.Combo("###window-side", ref sideIdx, sideOptions, sideOptions.Length))
@@ -30,6 +36,7 @@ public partial class ConfigWindow
             {
                 0 => WindowSide.Left,
                 1 => WindowSide.Right,
+                2 => WindowSide.None,
                 _ => Plugin.Config.WindowSide,
             };
 

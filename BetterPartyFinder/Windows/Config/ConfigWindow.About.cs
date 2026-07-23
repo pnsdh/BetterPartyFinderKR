@@ -49,14 +49,6 @@ public partial class ConfigWindow
 
         ImGui.SameLine();
 
-        using (ImRaii.PushColor(ImGuiCol.Button, ImGuiColors.DPSRed))
-        {
-            if (ImGui.Button("이슈"))
-                Dalamud.Utility.Util.OpenLink("https://github.com/Infiziert90/BetterPartyFinder/issues");
-        }
-
-        ImGui.SameLine();
-
         using (ImRaii.PushColor(ImGuiCol.Button, new Vector4(0.12549f, 0.74902f, 0.33333f, 0.6f)))
         {
             if (ImGui.Button("Ko-Fi 팁"))

@@ -40,9 +40,10 @@ public unsafe partial class MainWindow : Window, IDisposable
 
     public override void PreDraw()
     {
+        // 도킹은 ShowWhenPfOpen(자동 열림)과 무관하게, 파티 찾기 창이 열려 있으면 동작한다
         Addon = null;
         var addonPtr = Plugin.GameGui.GetAddonByName("LookingForGroup");
-        if (Plugin.Config.ShowWhenPfOpen && addonPtr != nint.Zero)
+        if (Plugin.Config.WindowSide != WindowSide.None && addonPtr != nint.Zero)
             Addon = (AtkUnitBase*) addonPtr.Address;
 
         IsCollapsed = true;

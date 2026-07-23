@@ -43,13 +43,17 @@ public static class Util
 
     internal static IEnumerable<World> WorldsOnDataCentre(IPlayerCharacter character)
     {
+        // 파티 찾기는 데이터센터 단위이므로 홈월드와 같은 DC의 공개 월드를 시트에서 조회한다.
+        // KR 클라이언트 시트 데이터가 기대와 다를 경우에 대비해 알려진 한국 월드 ID로 폴백.
+        var dataCenter = character.HomeWorld.Value.DataCenter.RowId;
+        var worlds = Sheets.WorldSheet
+            .Where(world => world.IsPublic && world.DataCenter.RowId == dataCenter)
+            .ToList();
+        if (worlds.Count > 0)
+            return worlds;
+
         uint[] krServerIds = [2075, 2076, 2077, 2078, 2080];
         return Sheets.WorldSheet.Where(world => krServerIds.Contains(world.RowId));
-
-        /*
-        var dcRow = character.HomeWorld.Value.DataCenter.Value.Region;
-        return Sheets.WorldSheet.Where(world => world.IsPublic && world.DataCenter.Value.Region.RowId == dcRow.RowId);
-        */
     }
 
     /// <summary> Iterate over enumerables with additional index. </summary>

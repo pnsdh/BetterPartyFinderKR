@@ -63,7 +63,12 @@ public partial class MainWindow
 
         foreach (var cf in filter.Duties.Order().ToArray())
         {
-            if (!ImGui.Selectable(Sheets.ContentFinderSheet.GetRow(cf).Name.UpperCaseStr()))
+            // 게임 업데이트로 사라진 임무 row가 설정에 남아 있을 수 있다
+            var dutyRow = Sheets.ContentFinderSheet.GetRowOrDefault(cf);
+            if (dutyRow == null)
+                continue;
+
+            if (!ImGui.Selectable(dutyRow.Value.Name.UpperCaseStr()))
                 continue;
 
             filter.Duties.Remove(cf);
@@ -108,7 +113,7 @@ public partial class MainWindow
         var ret = false;
         foreach (var duty in FilteredDuties!.Where(d => !filter.Duties.Contains(d.RowId)))
         {
-            using var pushedId = ImRaii.PushId(id);
+            using var pushedId = ImRaii.PushId((int)duty.RowId);
             if (!ImGui.Selectable(duty.Name.UpperCaseStr()))
                 continue;
 

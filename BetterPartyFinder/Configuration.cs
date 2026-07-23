@@ -305,4 +305,5 @@ public enum WindowSide
 {
     Left,
     Right,
+    None,
 }

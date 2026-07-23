@@ -86,7 +86,7 @@ public partial class MainWindow
             }
         }
 
-        foreach (var idx in toRemove)
+        foreach (var idx in toRemove.OrderByDescending(x => x))
             filter.Jobs.RemoveAt(idx);
 
         if (toRemove.Count > 0)

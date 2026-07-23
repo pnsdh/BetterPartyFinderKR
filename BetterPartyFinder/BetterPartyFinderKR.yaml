@@ -15,6 +15,7 @@ description: |-
 
   한국 서버용 커스텀: 한국어 UI, 한국 파티 찾기 용어 기반 빠른 키워드 필터링, 직업 필터링 확장.
 repo_url: https://github.com/pnsdh/BetterPartyFinderKR
+accepts_feedback: false
 tags:
   - party finder
   - filter
