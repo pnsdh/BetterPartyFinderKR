@@ -43,15 +43,10 @@ public static class Util
 
     internal static IEnumerable<World> WorldsOnDataCentre(IPlayerCharacter character)
     {
-        // 파티 찾기는 데이터센터 단위이므로 홈월드와 같은 DC의 공개 월드를 시트에서 조회한다.
-        // KR 클라이언트 시트 데이터가 기대와 다를 경우에 대비해 알려진 한국 월드 ID로 폴백.
-        var dataCenter = character.HomeWorld.Value.DataCenter.RowId;
-        var worlds = Sheets.WorldSheet
-            .Where(world => world.IsPublic && world.DataCenter.RowId == dataCenter)
-            .ToList();
-        if (worlds.Count > 0)
-            return worlds;
-
+        // KR 클라이언트 시트에서는 동적 조회가 불가능해 하드코딩한다 (7.5 기준 검증):
+        // - KR 월드는 전부 IsPublic=False라서 업스트림의 IsPublic 필터는 빈 결과가 나온다.
+        // - DC(201)·UserType·Region으로 거르면 실서버 5개 외에 미운영 월드 '오메가'(2081)가 섞이고,
+        //   이를 구분할 수 있는 컬럼이 시트에 없다.
         uint[] krServerIds = [2075, 2076, 2077, 2078, 2080];
         return Sheets.WorldSheet.Where(world => krServerIds.Contains(world.RowId));
     }
